@@ -3,9 +3,10 @@ require('dotenv').config();
 
 module.exports = function (req, res, next) {
     try {
-        const ret = req.header('Authorization');
-        // console.log(jwtToken);
-        var jwtToken = ret.replace('Bearer ','');
+        // const ret = req.header('Authorization');
+        // // console.log(jwtToken);
+        // var jwtToken = ret.replace('Bearer ','');
+        var jwtToken = req.body.token || req.query.token || req.headers["x-access-token"];
         // console.log(jwtToken);   //prints: 123
 
         // If no token returned, decline authorization

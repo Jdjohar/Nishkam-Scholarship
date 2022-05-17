@@ -2,6 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const db = require("./db");
 const bcrypt = require("bcrypt");
 const passportCustom = require('passport-custom');
+const jwtGenerator = require('./utils/jwtGenerator');
 const CustomStrategy = passportCustom.Strategy;
 
 function initialize(passport) {
@@ -10,15 +11,19 @@ function initialize(passport) {
     
     //Check if email exists in database
     const results = await db.query(
-      `SELECT * FROM users WHERE email = $1`, 
+      `SELECT * FROM students WHERE stuemail = $1`, 
       [email])
       console.log(results.rows);
 
       
       if(results.rows.length > 0) {
         const user = results.rows[0];
+        // provide token
 
-        bcrypt.compare(password, user.password, (err, isMatch) => {
+        const token = jwtGenerator(user.id);
+        user['token'] = token;
+
+        bcrypt.compare(password, user.lgpassword, (err, isMatch) => {
           if(err){
             throw err;
           }
@@ -67,7 +72,7 @@ function initialize(passport) {
 
   passport.deserializeUser(async(id, done) => {
     const results = await db.query(
-      `SELECT * FROM users WHERE id = $1`, [id], (err) => {
+      `SELECT * FROM students WHERE id = $1`, [id], (err) => {
         if(err) {
           throw err;
         }

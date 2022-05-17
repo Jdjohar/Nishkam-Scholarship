@@ -15,20 +15,173 @@ CREATE TABLE products
 ALTER TABLE products ADD COLUMN featured boolean;
 ALTER TABLE products DROP COLUMN featured;
 
-CREATE TABLE business (
+CREATE TABLE applicationdata (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    business_name VARCHAR(50) NOT NULL,
-    country VARCHAR(50) NOT NULL,
-    city VARCHAR(50) NOT NULL,
-    province VARCHAR(50) NOT NULL,
-    phonenumber VARCHAR(50) NOT NULL,
-    country_id INT  NULL,
-    province_id  INT  NULL,
-    city_id  INT  NULL,
-    business_reg_date DATE  NULL,
-    business_paid_date DATE  NULL,
-    business_paid_plan DATE  NULL
+	stuid BIGINT NULL REFERENCES students(id),
+	catid BIGINT NULL REFERENCES studentcategory(id),
+    stucatname VARCHAR(255) NULL,
+    cattype VARCHAR(255) NULL,
+    applicationsession VARCHAR(255) NULL,
+    fullname VARCHAR(255) NULL,
+    dob VARCHAR(255) NULL,
+    religion VARCHAR(255) NULL,
+    castecat VARCHAR(255) NULL,
+    gender VARCHAR(255) NULL,
+    contactno VARCHAR(255) NULL,
+    email VARCHAR(255) NULL,
+    raddress  TEXT NULL,
+    district  VARCHAR(255) NULL,
+    tehsil  VARCHAR(255) NULL,
+    stustate  VARCHAR(255) NULL,
+    pincode  VARCHAR(255) NULL,
+    residing  VARCHAR(255) NULL,
+    Fathername  VARCHAR(255) NULL,
+    Fathereducation  VARCHAR(255) NULL,
+    Fatheroccupation  VARCHAR(255) NULL,
+    Fatherannualincome  VARCHAR(255) NULL,
+    mothername  VARCHAR(255) NULL,
+    mothereducation  VARCHAR(255) NULL,
+    motheroccupation  VARCHAR(255) NULL,
+    motherannualincome  VARCHAR(255) NULL,
+    brothersisterdetail TEXT NULL,
+    rusticatedyesno VARCHAR(255) NULL,
+    rusticatedyesdetail TEXT NULL,
+    shdfrequestyesno VARCHAR(255) NULL,
+    shdfrequestyesdetail TEXT NULL,
+    examinationspasseddetail TEXT NULL,
+    academicrecorddetail TEXT NULL,
+    scholarshipisrequested VARCHAR(255) NULL,
+    duration VARCHAR(255) NULL,
+    admission VARCHAR(255) NULL,
+    completion VARCHAR(255) NULL,
+    collegeUniversityname VARCHAR(255) NULL,
+    collegeUniversityaddress VARCHAR(255) NULL,
+    collegeUniversitytype VARCHAR(255) NULL,
+    collegeUniversitystudyingatpresent VARCHAR(255) NULL,
+    achievementsscholarshipmedal VARCHAR(255) NULL,
+    achievementsmeritcertificate VARCHAR(255) NULL,
+    achievementshobbies VARCHAR(255) NULL,
+    referencesperson TEXT NULL,
+    justification TEXT NULL,
+    detailsofbankaccount TEXT NULL,
+    familyoccupationname VARCHAR(255) NULL,
+    familyoccupationfather VARCHAR(255) NULL,
+    familyoccupationmother VARCHAR(255) NULL,
+    familyassetsowned TEXT NULL,
+    familyagricultureassets TEXT NULL,
+    familylivesto TEXT NULL,
+    knowscholarship VARCHAR(255) NULL,
+    interviewtimeslot VARCHAR(255) NULL,
+    interviewcenter VARCHAR(255) NULL,
+    stu_reg_date DATE  NULL,
 );
+
+UPDATE studentcategory SET stuid = value1, WHERE catid = RETURNING * | output_expression AS output_name;
+
+    catname VARCHAR(255) NULL,
+    cattype VARCHAR(255) NULL,
+    applicationsession VARCHAR(255) NULL,
+ALTER TABLE applicationdata ADD COLUMN familylivesto TEXT NULL;
+ALTER TABLE studentcategory ALTER COLUMN appid TYPE BIGINT NULL REFERENCES applicationdata(id);
+
+CREATE TABLE collegereport (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    stuid BIGINT NULL REFERENCES students(id),
+    applicantid VARCHAR(255) NULL,
+    nameofstudent VARCHAR(255) NULL,
+    fathername VARCHAR(255) NULL,
+    studentaddress VARCHAR(255) NULL,
+    district VARCHAR(255) NULL,
+    tehsil VARCHAR(255) NULL,
+    pincode VARCHAR(255) NULL,
+    phonenumber VARCHAR(255) NULL,
+    emailid VARCHAR(255) NULL,
+    nameofthecollege VARCHAR(255) NULL,
+    addressofthecollege VARCHAR(255) NULL,
+    nameoftheuniversity VARCHAR(255) NULL,
+    nameoftheprincipal VARCHAR(255) NULL,
+    nameoftheprincipalphone VARCHAR(255) NULL,
+    nameoftheprincipalemail VARCHAR(255) NULL,
+    familyincome VARCHAR(255) NULL,
+    receivingfinancialaidyesno VARCHAR(255) NULL,
+    receivingfinancialaidorganization VARCHAR(255) NULL,
+    receivingfinancialaidacademicyear VARCHAR(255) NULL,
+    academicyeardetail TEXT NULL,
+    prevoiusyeardetail TEXT NULL,
+    tutionfee VARCHAR(255) NULL,
+    developmentfee VARCHAR(255) NULL,
+    examinationfee VARCHAR(255) NULL,
+    otherfee VARCHAR(255) NULL,
+    totalfee VARCHAR(255) NULL,
+    transportfee VARCHAR(255) NULL,
+    refundablefee VARCHAR(255) NULL,
+    hostelfee VARCHAR(255) NULL,
+    grandfee VARCHAR(255) NULL
+);
+
+
+ALTER TABLE applicationdata 
+RENAME COLUMN stucatname 
+TO formatname;
+
+CREATE TABLE studentcategory (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    stuid BIGINT NULL REFERENCES students(id),
+    categoryname VARCHAR(255) NULL,
+    formatname VARCHAR(255) NULL,
+    stu_reg_date DATE  NULL,
+    update_date DATE  NULL
+);
+
+CREATE TABLE finalsubmit (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+     lastupdate date CURRENT_TIMESTAMP,
+     colleger VARCHAR(255) NULL
+);
+
+insert into finalsubmit (colleger)VALUES('abc');
+
+CREATE TABLE finalsubmit (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    stuid BIGINT NULL REFERENCES students(id),
+    catid BIGINT NULL REFERENCES studentcategory(id),
+    appid BIGINT NULL REFERENCES applicationdata(id),
+    uniqueid VARCHAR(255) NULL,
+    collegereportfilename VARCHAR(255) NULL,
+    appilicationstatus VARCHAR(255) NULL,
+    appilicationstatusmessage VARCHAR(255) NULL,
+    entrytime VARCHAR(255) NULL,
+    lastupdate DATE  NULL,
+    update_date DATE  NULL
+);
+
+insert into studentcategory (categoryname)VALUES('abc') RETURNING id;
+
+CREATE TABLE documentupload (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    stuid BIGINT NULL REFERENCES students(id),
+    appid BIGINT NULL REFERENCES applicationdata(id),
+    documentname VARCHAR(255) NULL,
+    docfilename VARCHAR(255) NULL,
+    approvestatus VARCHAR(255) NULL,
+    stu_reg_date DATE  NULL,
+    update_date DATE  NULL
+);
+
+CREATE TABLE interviewcenter (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    centername VARCHAR(255) NULL,
+    centerinchargename VARCHAR(255) NULL,
+    centerinchargephone VARCHAR(255) NULL,
+    stu_reg_date TIMESTAMP,
+    update_date TIMESTAMP
+);
+
+
+
+
+
+
 CREATE TABLE business_appoint (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     business_name VARCHAR(50) NOT NULL,

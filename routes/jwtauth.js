@@ -14,7 +14,7 @@ router.post('/register', validInfo, async (req, res) => {
             const { name, email, password } = req.body;
            
         // Check if email already exists (if so, throw error)
-            const user = await db.query("SELECT * FROM users WHERE email = $1", [
+            const user = await db.query("SELECT * FROM students WHERE email = $1", [
                 email
             ]);
 
@@ -32,7 +32,7 @@ router.post('/register', validInfo, async (req, res) => {
             const bcryptPassword = await bcrypt.hash(password, salt);
 
         // Insert details in db
-            const newUser = await db.query("INSERT INTO USERS(name, email, password) VALUES($1, $2, $3) RETURNING *", [
+            const newUser = await db.query("INSERT INTO STUDENTS(name, email, password) VALUES($1, $2, $3) RETURNING *", [
                 name, email, bcryptPassword
             ]);
             
@@ -54,7 +54,7 @@ router.post('/login', validInfo, async (req, res) => {
         const { email, password } = req.body;
         
         // error if no such user
-        const user = await db.query("SELECT * FROM users WHERE email = $1", [
+        const user = await db.query("SELECT * FROM students WHERE email = $1", [
             email
         ]);
 

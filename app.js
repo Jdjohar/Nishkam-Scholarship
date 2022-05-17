@@ -1,6 +1,7 @@
 require("dotenv").config();
 const cors = require("cors");
 var express = require('express');
+const fileupload = require("express-fileupload");
 var bodyParser = require('body-parser')
 const db = require('./db')
 var path = require('path');
@@ -34,7 +35,7 @@ app.use(passport.session());
 app.use(flash());
 
 app.use(cors());
-  
+app.use(fileupload());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -43,8 +44,7 @@ app.use(bodyParser.json());
 
 
 // set path for static assets
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, 'public'))); 
 
 // routes
 app.use('/', index);
