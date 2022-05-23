@@ -311,8 +311,7 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
     }
     return res.status(200).json({
       status: "success",
-      data: user,
-      redirect: "/"
+      message: `Welcome ${user[0].data.stuname}, Nishkam Scholarship Automation`,
     });
   })(req, res, next);
 }
