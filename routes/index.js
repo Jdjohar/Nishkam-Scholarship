@@ -306,7 +306,7 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
     if(!user) {
       return res.status(401).json({
         status: "failure",
-        redirect: "/login"
+        message: "Login Details Incorrect",
       });
     }
     return res.status(200).json({
