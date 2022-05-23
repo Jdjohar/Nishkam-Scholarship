@@ -266,8 +266,9 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
   let hashedpassword = await bcrypt.hash(password, 10);
   const results = await db.query(`SELECT * FROM students WHERE stuemail = $1`, [email]);
   if(results.rows.length > 0){
-    res.status(401).json({
-      status: "Email id Already Exist",
+    res.status(200).json({
+      status: "failed",
+      message:  "Email id Already Exist"
     })
   } else {
     const newUser = await db.query(
@@ -276,10 +277,20 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
       `, [name, email, hashedpassword, signinwith,mobilenumber]
     )
     console.log(newUser,"New User");
+    const lastid = newUser.rows[0].id
+    if(lastid > 0)
+    {
     res.status(200).json({
       status: "success",
       data: results.rows,
+      message: "Registered"
     });
+    }else{
+      res.status(200).json({
+        status: "failed",
+        message: "Try Again..."
+      });
+    }
   }
 
 
