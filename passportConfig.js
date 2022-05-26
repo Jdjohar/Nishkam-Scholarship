@@ -13,7 +13,7 @@ function initialize(passport) {
     const results = await db.query(
       `SELECT * FROM students WHERE stuemail = $1`, 
       [email])
-      console.log(results.rows);
+      // console.log(results.rows);
 
       
       if(results.rows.length > 0) {
@@ -67,7 +67,7 @@ function initialize(passport) {
 
   passport.serializeUser((user, done) => {
     console.log("user: ",user);
-    done(null, user.rows[0].id)
+    done(null, user)
   });
 
   passport.deserializeUser(async(id, done) => {

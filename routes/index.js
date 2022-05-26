@@ -299,19 +299,20 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
     if(err) {
       return next(err);
     }
+    console.log(user, 'Login 1')
     
     if(!user) {
       return res.status(401).json({
         status: "failure",
         message: "Login Details Incorrect",
       });
-    }else{
+    }
     return res.status(200).json({
       status: "success",
-      message: `Welcome , Nishkam Scholarship Automation`,
-      data: user[0]
+      message: `Welcome ${user.stuname}, Nishkam Scholarship Automation`,
+      data: user
     });
-  }
+    
   })(req, res, next);
 }
 );
