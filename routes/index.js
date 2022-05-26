@@ -243,7 +243,7 @@ router.get("/api/v1/testapi", async (req, res) => {
     const results = await db.query("select * from students");
     // console.log(results);
     res.status(200).json({
-      status: "success DOne",
+      status: "success 2",
      
     });
 
