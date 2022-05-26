@@ -81,7 +81,7 @@ UPDATE studentcategory SET stuid = value1, WHERE catid = RETURNING * | output_ex
     catname VARCHAR(255) NULL,
     cattype VARCHAR(255) NULL,
     applicationsession VARCHAR(255) NULL,
-ALTER TABLE applicationdata ADD COLUMN familylivesto TEXT NULL;
+ALTER TABLE applicationdata ADD COLUMN contactno2 TEXT NULL;
 ALTER TABLE studentcategory ALTER COLUMN appid TYPE BIGINT NULL REFERENCES applicationdata(id);
 
 CREATE TABLE collegereport (
@@ -139,7 +139,7 @@ CREATE TABLE finalsubmit (
      colleger VARCHAR(255) NULL
 );
 
-insert into finalsubmit (colleger)VALUES('abc');
+insert into interviewcenter (centername, centerinchargename,centerinchargephone)VALUES('Chandigarh','centerinchargename','centerinchargephone' );
 
 CREATE TABLE finalsubmit (
     id BIGSERIAL NOT NULL PRIMARY KEY,
