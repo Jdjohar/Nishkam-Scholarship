@@ -299,6 +299,7 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
 
 // Normal login Scholarship
 router.post("/api/v1/scholarship/login",function(req,res,next){
+  console.log('Login 1')
   passport.authenticate("local", function(err, user, info) {
     if(err) {
       return next(err);

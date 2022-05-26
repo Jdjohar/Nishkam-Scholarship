@@ -28,11 +28,18 @@ app.use(session({
 
   saveUninitialized: false
 }));
-const corsOptions ={
-  origin:'*', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200,
+const whitelist = ["https://scholarshipauto.herokuapp.com/"]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  credentials: true,
 }
+app.use(cors(corsOptions))
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 app.use(passport.initialize());
