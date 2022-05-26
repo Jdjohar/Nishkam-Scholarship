@@ -299,7 +299,7 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
     if(err) {
       return next(err);
     }
-    res.set('Access-Control-Allow-Origin', '*');
+    
     if(!user) {
       return res.status(401).json({
         status: "failure",
