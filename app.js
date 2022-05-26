@@ -1,6 +1,6 @@
 require("dotenv").config();
-const cors = require("cors");
 var express = require('express');
+var cors = require('cors')
 const fileupload = require("express-fileupload");
 var bodyParser = require('body-parser')
 const db = require('./db')
@@ -28,16 +28,16 @@ app.use(session({
 
   saveUninitialized: false
 }));
-app.use(cors({
-  origin: '*'
-}));
+// app.use(cors({
+//   origin: '*'
+// }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(flash());
 
-app.use(cors());
+
 app.use(fileupload());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -48,7 +48,11 @@ app.use(bodyParser.json());
 
 // set path for static assets
 app.use(express.static(path.join(__dirname, 'public'))); 
-
+app.use(cors())
+var corsOptions = {
+  origin: 'http://localhost:3000/',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 // routes
 app.use('/', index);
 

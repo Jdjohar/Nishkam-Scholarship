@@ -1,4 +1,3 @@
-var cors = require('cors');
 var express = require('express');
 const fileupload = require("express-fileupload");
 const morgan = require("morgan");
@@ -22,11 +21,6 @@ const { bodyParser } = require('body-parser');
 
 
 var router = express.Router();
-
-router.use(cors({
-    origin: '*'
-  }));
-router.all(cors());
 // router.all(express.static("/files"));
 
 // Add Access Control Allow Origin headers
