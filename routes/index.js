@@ -22,6 +22,10 @@ const { bodyParser } = require('body-parser');
 
 
 var router = express.Router();
+
+router.use(cors({
+    origin: '*'
+  }));
 router.all(cors());
 // router.all(express.static("/files"));
 
@@ -245,11 +249,8 @@ router.get("/api/v1/testapi", async (req, res) => {
     const results = await db.query("select * from students");
     // console.log(results);
     res.status(200).json({
-      status: "success",
-      results: results.rows.length,
-      data:{
-        business:results.rows,
-      },
+      status: "success DOne",
+     
     });
 
   }catch (err) {
