@@ -268,7 +268,7 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
   } else {
     const newUser = await db.query(
       `INSERT INTO students(stuname, stuemail, lgpassword,loginwith,stumobile )
-      VALUES($1, $2, $3, $4, $5)
+      VALUES($1, $2, $3, $4, $5) RETURNING id
       `, [name, email, hashedpassword, signinwith,mobilenumber]
     )
     console.log(newUser,"New User");
