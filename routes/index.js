@@ -295,7 +295,6 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
 // Normal login Scholarship
 router.post("/api/v1/scholarship/login",function(req,res,next){
   console.log('Login 1')
-  res.set('Access-Control-Allow-Origin', '*');
   passport.authenticate("local", function(err, user, info) {
     if(err) {
       return next(err);
@@ -306,6 +305,7 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
         message: "Login Details Incorrect",
       });
     }
+    res.set('Access-Control-Allow-Origin', '*');
     return res.status(200).json({
       status: "success",
       message: `Welcome ${user[0].data.stuname}, Nishkam Scholarship Automation`,
