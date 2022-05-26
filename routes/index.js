@@ -299,17 +299,18 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
     if(err) {
       return next(err);
     }
+    res.set('Access-Control-Allow-Origin', '*');
     if(!user) {
       return res.status(401).json({
         status: "failure",
         message: "Login Details Incorrect",
       });
-    }
-    res.set('Access-Control-Allow-Origin', '*');
+    }else{
     return res.status(200).json({
       status: "success",
-      message: `Welcome ${user[0].data.stuname}, Nishkam Scholarship Automation`,
+      message: `Welcome , Nishkam Scholarship Automation`,
     });
+  }
   })(req, res, next);
 }
 );
