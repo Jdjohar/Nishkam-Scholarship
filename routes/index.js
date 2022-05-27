@@ -821,7 +821,7 @@ router.get("/api/v1/admin/fullfecthdata/:id", async(req,res)=> {
 router.get("/api/v1/admin/fetchcollegerepot/:stuid/:applicantid", async (req, res) => {
   try{
     // console.log(stuid,appid, "asasxcascdmasnasbcdu");
-    const checkdocument = await db.query(`select * from collegereport where stuid = $1 AND applicantid = $2`, [req.params.stuid,req.params.applicantid ]);
+    const checkdocument = await db.query(`select * from collegereport where stuid = $1 AND applicantid = $2 order by id desc`, [req.params.stuid,req.params.applicantid ]);
     console.log(checkdocument);
     res.status(200).json({
       status: "success",
