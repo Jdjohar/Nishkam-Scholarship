@@ -465,7 +465,7 @@ router.post("/api/v1/scholarship/docsupload", async(req, res) => {
   const newpath = path.join(__dirname, '../public/uploads/');
   console.log(newpath);
   const file = req.files.file;
-  const filename = file.name;
+  const filename = Date.now()+file.name;
  
   file.mv(`${newpath}${filename}`, (err) => {
     if (err) {
@@ -492,7 +492,7 @@ router.post("/api/v1/scholarship/passport", (req, res) => {
   let {stuid,appid} = req.body;
   const newpath = path.join(__dirname, '../public/uploads/');
   const passportfile = req.files.passport;
-  const passportfilename = passportfile.name;
+  const passportfilename = Date.now()+passportfile.name;
  
   passportfile.mv(`${newpath}${passportfilename}`, (err) => {
     if (err) {
@@ -509,7 +509,7 @@ router.post("/api/v1/scholarship/dmc", (req, res) => {
   let {stuid,appid} = req.body;
   const newpath = path.join(__dirname, '../public/uploads/');
   const dmcfile = req.files.dmc;
-  const dmcfilename = dmcfile.name;
+  const dmcfilename = Date.now()+dmcfile.name;
  
   dmcfile.mv(`${newpath}${dmcfilename}`, (err) => {
     if (err) {
@@ -527,7 +527,7 @@ router.post("/api/v1/scholarship/feesreceipts", (req, res) => {
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
   const feesreceiptfile = req.files.feesreceipts;
-  const feesreceiptfilename = feesreceiptfile.name;
+  const feesreceiptfilename = Date.now()+feesreceiptfile.name;
  
   feesreceiptfile.mv(`${newpath}${feesreceiptfilename}`, (err) => {
     if (err) {
@@ -545,7 +545,7 @@ router.post("/api/v1/scholarship/deathcertificate", (req, res) => {
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
   const deathcertificatefile = req.files.deathcertificate;
-  const deathcertificatefilename = deathcertificatefile.name;
+  const deathcertificatefilename = Date.now()+deathcertificatefile.name;
  
   deathcertificatefile.mv(`${newpath}${deathcertificatefilename}`, (err) => {
     if (err) {
@@ -563,7 +563,7 @@ router.post("/api/v1/scholarship/familyincome", (req, res) => {
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
   const familyincomefile = req.files.familyincome;
-  const familyincomefilename = familyincomefile.name;
+  const familyincomefilename = Date.now()+familyincomefile.name;
  
   familyincomefile.mv(`${newpath}${familyincomefilename}`, (err) => {
     if (err) {
@@ -582,7 +582,7 @@ router.post("/api/v1/scholarship/photocopypassbook", (req, res) => {
     const newpath = path.join(__dirname, '../public/uploads/');
 
   const photocopypassbookfile = req.files.photocopypassbook;
-  const photocopypassbookfilename = photocopypassbookfile.name;
+  const photocopypassbookfilename = Date.now()+photocopypassbookfile.name;
  
   photocopypassbookfile.mv(`${newpath}${photocopypassbookfilename}`, (err) => {
     if (err) {
@@ -598,7 +598,7 @@ router.post("/api/v1/scholarship/otherdocument", (req, res) => {
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
   const otherdocumentfile = req.files.otherdocument;
-  const otherdocumentfilename = otherdocumentfile.name;
+  const otherdocumentfilename = Date.now()+otherdocumentfile.name;
  console.log("Print atas")
   otherdocumentfile.mv(`${newpath}${otherdocumentfilename}`, (err) => {
     if (err) {
