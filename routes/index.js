@@ -676,7 +676,7 @@ router.post("/api/v1/admin/applicationstatusget", async (req, res) => {
 router.get("/api/v1/admin/applicationresults/:id", async (req, res) => {
   let {id} = req.params;
   try{
-    const results = await db.query(`select * from applicationdata where stuid = $1`,[id]);
+    const results = await db.query(`select * from applicationdata where stuid = $1 order by id desc`,[id]);
     // console.log(results);
     res.status(200).json({
       status: "success",
