@@ -359,6 +359,18 @@ router.post("/api/v1/scholarship/collegereport", async (req, res) => {
     let {stuid,applicantid,nameofstudent,fathername,studentaddress,district,tehsil,pincode,phonenumber,emailid,nameofthecollege,addressofthecollege,nameoftheuniversity,nameoftheprincipal,nameoftheprincipalphone,nameoftheprincipalemail,familyincome,receivingfinancialaidyesno,receivingfinancialaidorganization,receivingfinancialaidacademicyear,academicyeardetail,prevoiusyeardetail,tutionfee,developmentfee,examinationfee,otherfee,totalfee,transportfee,refundablefee,hostelfee,grandfee} = req.body;
     const results = await db.query(`INSERT INTO collegereport(stuid,applicantid,nameofstudent,fathername,studentaddress,district,tehsil,pincode,phonenumber,emailid,nameofthecollege,addressofthecollege,nameoftheuniversity,nameoftheprincipal,nameoftheprincipalphone,nameoftheprincipalemail,familyincome,receivingfinancialaidyesno,receivingfinancialaidorganization,receivingfinancialaidacademicyear,academicyeardetail,prevoiusyeardetail,tutionfee,developmentfee,examinationfee,otherfee,totalfee,transportfee,refundablefee,hostelfee,grandfee)VALUES($1, $2, $3, $4, $5, $6, $7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31)`, [stuid,applicantid,nameofstudent,fathername,studentaddress,district,tehsil,pincode,phonenumber,emailid,nameofthecollege,addressofthecollege,nameoftheuniversity,nameoftheprincipal,nameoftheprincipalphone,nameoftheprincipalemail,familyincome,receivingfinancialaidyesno,receivingfinancialaidorganization,receivingfinancialaidacademicyear,academicyeardetail,prevoiusyeardetail,tutionfee,developmentfee,examinationfee,otherfee,totalfee,transportfee,refundablefee,hostelfee,grandfee]);
     console.log(results);
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid.toString(),academicyearapp]);
+  console.log(applicationreportgoogleUser, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1, applicationlock = $2 WHERE stuid = $3 AND academicyear = $4`, ['collegereport','true',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = await db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),applicantid.toString(),'collegereport','true',academicyearapp]);
+  }
+
+
+
     res.status(200).json({
       status: "success",
       results: results.rows[0],
@@ -389,6 +401,17 @@ router.post("/api/v1/scholarship/updatenewapplication", async (req, res) => {
     //   lastid: appid
     // });
     const updateresults = await db.query(`UPDATE studentcategory SET appid = $1 WHERE id = $2 RETURNING id`, [appid,catid]) ;
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid.toString(),academicyearapp]);
+  console.log(applicationreportgoogleUser, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1, applicationlock = $2 WHERE stuid = $3 AND academicyear = $4`, ['applicationform','false',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = await db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'applicationform','false',academicyearapp]);
+  }
+
+
 
     res.status(200).json({
       status: "success",
@@ -437,7 +460,15 @@ const catid  = catresults.rows[0].id
     });
 console.log(applicationid.toString(),catid, "abc ==========")
     const updateresults = await db.query(`UPDATE studentcategory SET appid = $1 WHERE id = $2 RETURNING id`, [applicationid.toString(),catid]) ;
-    
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid.toString(),academicyearapp]);
+  console.log(applicationreportgoogleUser, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    // const applicationreportresults = await db.query(`UPDATE applicationreport SET appid = $1 WHERE id = $2 RETURNING id`, [applicationid.toString(),catid]) ;
+  }else{
+    const applicationreportresults = await db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),applicationid.toString(),'applicationform','false',academicyearapp]);
+  }
     res.status(200).json({
       status: "success",
       catidd: catid,
@@ -459,7 +490,8 @@ console.log(applicationid.toString(),catid, "abc ==========")
 
 
 // Documents Upload API STart
-router.post("/api/v1/scholarship/docsupload", async(req, res) => {
+router.post("/api/v1/scholarship/docsupload", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
   const newpath = path.join(__dirname, '../public/uploads/');
@@ -474,20 +506,35 @@ router.post("/api/v1/scholarship/docsupload", async(req, res) => {
 
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"marksheet",filename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
- 
- 
  
   });
 
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
 
 
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
 
 
 });
 
 
-router.post("/api/v1/scholarship/passport", (req, res) => {
+router.post("/api/v1/scholarship/passport", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
   const newpath = path.join(__dirname, '../public/uploads/');
@@ -500,11 +547,34 @@ router.post("/api/v1/scholarship/passport", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"Passport Size Photo",passportfilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid,academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid,appid,'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
-router.post("/api/v1/scholarship/dmc", (req, res) => {
+router.post("/api/v1/scholarship/dmc", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
   const newpath = path.join(__dirname, '../public/uploads/');
@@ -517,12 +587,35 @@ router.post("/api/v1/scholarship/dmc", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"DMC",dmcfilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
 
-router.post("/api/v1/scholarship/feesreceipts", (req, res) => {
+router.post("/api/v1/scholarship/feesreceipts", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
@@ -535,12 +628,35 @@ router.post("/api/v1/scholarship/feesreceipts", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"Fee Recipts",feesreceiptfilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
 
-router.post("/api/v1/scholarship/deathcertificate", (req, res) => {
+router.post("/api/v1/scholarship/deathcertificate", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
@@ -553,12 +669,35 @@ router.post("/api/v1/scholarship/deathcertificate", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"Death Certificate",deathcertificatefilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
 
-router.post("/api/v1/scholarship/familyincome", (req, res) => {
+router.post("/api/v1/scholarship/familyincome", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
@@ -571,12 +710,35 @@ router.post("/api/v1/scholarship/familyincome", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"Family Income",familyincomefilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
 
-router.post("/api/v1/scholarship/photocopypassbook", (req, res) => {
+router.post("/api/v1/scholarship/photocopypassbook", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
@@ -590,10 +752,33 @@ router.post("/api/v1/scholarship/photocopypassbook", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"PhotoCopy PassBook",photocopypassbookfilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
-router.post("/api/v1/scholarship/otherdocument", (req, res) => {
+router.post("/api/v1/scholarship/otherdocument", async (req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid} = req.body;
     const newpath = path.join(__dirname, '../public/uploads/');
@@ -606,8 +791,30 @@ router.post("/api/v1/scholarship/otherdocument", (req, res) => {
     }
     const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,"Other Document",otherdocumentfilename,"0"]);
     console.log(results);
-    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
   });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
 
@@ -716,6 +923,26 @@ router.get("/api/v1/admin/collegereport", async (req, res) => {
 
 //user information
 
+router.post("/api/v1/current/status/applicationreport", async(req,res)=> {
+  const stuid = req.body.stuid;
+  // const applicantid = req.body.applicantid;
+
+  const academicyearapp = new Date().getFullYear().toString()
+  const userinfo = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2 order by id desc`, [stuid,academicyearapp]);
+  // console.log(userinfo, "googleUser");
+  if(userinfo.rows.length > 0){
+    res.status(200).json({
+      status: "success",
+      data: userinfo.rows,
+      redirect: "/"
+    })
+  } else {
+      res.status(200).json({
+      status: "No Information exist in database",
+    })
+  }
+})
+
 router.post("/api/v1/admin/fetchapplicantdata", async(req,res)=> {
   const fullname = req.body.fullname;
   const contactno = req.body.contactno;
@@ -739,6 +966,7 @@ router.post("/api/v1/admin/fetchapplicantdata", async(req,res)=> {
 
 // Final Report Submit
 router.post("/api/v1/admin/finalsubmit", async(req, res) => {
+  try{
   console.log("upload start")
   let {stuid,appid,catid} = req.body;
   const newpath = path.join(__dirname, '../public/uploads/');
@@ -788,9 +1016,30 @@ router.post("/api/v1/admin/finalsubmit", async(req, res) => {
     // always executed
   });
     }
+ 
+  });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['applicationlock',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'applicationlock','false',academicyearapp]);
+  }
+
 
     res.status(200).send({ message: "File Uploaded", code: 200 });
-  });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
 });
 
 

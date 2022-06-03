@@ -15,6 +15,17 @@ CREATE TABLE products
 ALTER TABLE products ADD COLUMN featured boolean;
 ALTER TABLE products DROP COLUMN featured;
 
+
+
+CREATE TABLE applicationreport (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    stuid VARCHAR(255) NULL,
+    applicantid VARCHAR(255) NULL,
+    currentstatus VARCHAR(255) NULL,
+    applicationlock VARCHAR(255) NULL,
+    academicyear VARCHAR(255) NULL
+);
+
 CREATE TABLE applicationdata (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	stuid BIGINT NULL REFERENCES students(id),
