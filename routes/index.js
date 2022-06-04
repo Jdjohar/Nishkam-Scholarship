@@ -1042,6 +1042,67 @@ router.post("/api/v1/admin/finalsubmit", async(req, res) => {
 
 });
 
+// Final Report Submit
+router.post("/api/v1/application/lock", async(req, res) => {
+  try{
+  let {stuid,appid,catid} = req.body;
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['applicationlock',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'applicationlock','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
+});
+
+router.post("/api/v1/application/view/full", async(req,res)=> {
+  try{
+  let {stuid,appid} = req.body;
+  const applicationreport = await db.query(`select * from applicationreport where stuid = $1 AND applicantid = $2 order by id desc`, [stuid,appid]);
+  const checkfinalsubmit = await db.query(`select * from finalsubmit where stuid = $1 AND appid = $2 order by id desc`, [stuid,appid]);
+  const checkdocument = await db.query(`select * from documentupload where stuid = $1 AND appid = $2 order by id desc`, [stuid,appid]);
+  const collegereportinfo = await db.query(`SELECT * FROM collegereport WHERE stuid = $1 AND applicantid = $2 order by id desc`, [stuid,appid]);
+  const applicationdatainfo = await db.query(`SELECT * FROM applicationdata WHERE id = $1 order by id desc`, [appid]);
+  // console.log(userinfo, "googleUser");
+  if(applicationdatainfo.rows.length > 0){
+    res.status(200).json({
+      status: "success",
+      applicationdata: applicationdatainfo.rows,
+      collegereportdata: collegereportinfo.rows.length > 0 ? collegereportinfo.rows : null,
+      documentdata: checkdocument.rows.length > 0 ? checkdocument.rows : null,
+      finalsubmitdata: checkfinalsubmit.rows.length > 0 ? checkfinalsubmit.rows : null,
+      applicationreportdata: applicationreport.rows.length > 0 ? applicationreport.rows : null,
+      redirect: "/"
+    })
+  } else {
+      res.status(201).json({
+      status: "failed",
+      message: "No Information exist in database",
+    })
+  }  
+
+}catch (err) {
+  console.log(err);
+}
+
+})
+
+
 
 //user information
 
