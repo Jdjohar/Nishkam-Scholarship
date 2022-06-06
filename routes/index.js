@@ -1079,7 +1079,7 @@ router.post("/api/v1/application/view/full", async(req,res)=> {
   const collegereportinfo = await db.query(`SELECT * FROM collegereport WHERE stuid = $1 AND applicantid = $2 order by id desc`, [stuid,appid]);
   const applicationdatainfo = await db.query(`SELECT * FROM applicationdata WHERE id = $1 order by id desc`, [appid]);
   // console.log(userinfo, "googleUser");
-  if(applicationdatainfo.rows.length > 0){
+  // if(applicationdatainfo.rows.length > 0){
     res.status(200).json({
       status: "success",
       applicationdata: applicationdatainfo.rows,
@@ -1089,12 +1089,12 @@ router.post("/api/v1/application/view/full", async(req,res)=> {
       applicationreportdata: applicationreport.rows.length > 0 ? applicationreport.rows : null,
       redirect: "/"
     })
-  } else {
-      res.status(201).json({
-      status: "failed",
-      message: "No Information exist in database",
-    })
-  }  
+  // } else {
+  //     res.status(201).json({
+  //     status: "failed",
+  //     message: "No Information exist in database",
+  //   })
+  // }  
 
 }catch (err) {
   console.log(err);
