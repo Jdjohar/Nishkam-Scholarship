@@ -990,7 +990,7 @@ router.post("/api/v1/admin/finalsubmit", async(req, res) => {
       res.status(500).send({ message: "File upload failed", code: 200 });
     }
     console.log("results");
-    const results = await db.query(`INSERT INTO finalsubmit(stuid,appid,catid,uniqueid,collegereportfilename,appilicationstatus,appilicationstatusmessage,entrytime,lastupdate,update_date)VALUES($1, $2, $3, $4, $5,$6,$7,$8,$9,$10)`, [stuid,appid,catid,uniqueid,collegereportfilename,"0","Pending",entrytime,lastupdate,update_date]);
+    const results =  db.query(`INSERT INTO finalsubmit(stuid,appid,catid,uniqueid,collegereportfilename,appilicationstatus,appilicationstatusmessage,entrytime,lastupdate,update_date)VALUES($1, $2, $3, $4, $5,$6,$7,$8,$9,$10)`, [stuid,appid,catid,uniqueid,collegereportfilename,"0","Pending",entrytime,lastupdate,update_date]);
     console.log(results);
 
 
