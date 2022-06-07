@@ -994,28 +994,28 @@ router.post("/api/v1/admin/finalsubmit", async(req, res) => {
     console.log(results);
 
 
-  //   const getcontactno = await db.query(`select contactno from applicationdata where stuid = $1`,[stuid]);
-  //   console.log(getcontactno, "========================");
-  //   if(getcontactno.rows.length > 0)
-  //   {
-  //   const contactno = getcontactno.rows[0].contactno
+    const getcontactno = await db.query(`select contactno from applicationdata where stuid = $1`,[stuid]);
+    console.log(getcontactno, "========================");
+    if(getcontactno.rows.length > 0)
+    {
+    const contactno = getcontactno.rows[0].contactno
     
-  //   const message = `Dear Applicant, Your Application is successfully submitted. Status is Pending.`
-  //   const api_url = `http://pro.eglsms.in/app/smsapi/index.php?key=561F8DC385D0C7&campaign=0&routeid=21&type=text&contacts=91${contactno}&senderid=ALERTN&msg=${message}`;
+    const message = `Dear Applicant, Your Application is successfully submitted. Status is Pending.`
+    const api_url = `http://pro.eglsms.in/app/smsapi/index.php?key=561F8DC385D0C7&campaign=0&routeid=21&type=text&contacts=91${contactno}&senderid=ALERTN&msg=${message}`;
     
-  //   axios.get(api_url)
-  // .then(function (response) {
-  //   // handle success
-  //   console.log(response);
-  // })
-  // .catch(function (error) {
-  //   // handle error
-  //   console.log(error);
-  // })
-  // .then(function () {
-  //   // always executed
-  // });
-  //   }
+    axios.get(api_url)
+  .then(function (response) {
+    // handle success
+    console.log(response);
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .then(function () {
+    // always executed
+  });
+    }
  
   });
 
