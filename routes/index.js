@@ -1228,9 +1228,16 @@ router.post("/api/v1/admin/currentfinalstatus", async (req, res) => {
     if(appid != "" && appid != null)
     {
       const results = await db.query(`select * from finalsubmit where stuid = $1 AND appid = $2`,[stuid,appid]);
+      console.log(results);
+      res.status(200).json({
+        status: "success",
+        results: results.rows.length,
+        data:{
+          business:results.rows,
+        },
+      });
     }else{
     const results = await db.query(`select * from finalsubmit where stuid = $1`,[stuid]);
-    }
     console.log(results);
     res.status(200).json({
       status: "success",
@@ -1239,6 +1246,7 @@ router.post("/api/v1/admin/currentfinalstatus", async (req, res) => {
         business:results.rows,
       },
     });
+    }
 
   }catch (err) {
     console.log(err);
