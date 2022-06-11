@@ -1223,9 +1223,14 @@ router.get("/api/v1/admin/fetchinterviewcenter", async (req, res) => {
 
 // Fetch Interviewcenter API
 router.post("/api/v1/admin/currentfinalstatus", async (req, res) => {
-  const {stuid} = req.body;
+  const {stuid, appid} = req.body;
   try{
+    if(appid != "" && appid != null)
+    {
+      const results = await db.query(`select * from finalsubmit where stuid = $1 AND appid = $2`,[stuid,appid]);
+    }else{
     const results = await db.query(`select * from finalsubmit where stuid = $1`,[stuid]);
+    }
     console.log(results);
     res.status(200).json({
       status: "success",
