@@ -152,6 +152,9 @@ CREATE TABLE finalsubmit (
 
 insert into interviewcenter (centername, centerinchargename,centerinchargephone)VALUES('Chandigarh','centerinchargename','centerinchargephone' );
 
+ALTER TABLE finalsubmit DROP COLUMN catid;
+ALTER TABLE finalsubmit ADD COLUMN catid TEXT NULL;
+
 CREATE TABLE finalsubmit (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     stuid BIGINT NULL REFERENCES students(id),

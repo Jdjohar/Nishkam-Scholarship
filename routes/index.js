@@ -816,6 +816,64 @@ router.post("/api/v1/scholarship/otherdocument", async (req, res) => {
 
 
 });
+router.post("/api/v1/scholarship/documentdelete", async (req, res) => {
+  try{
+  console.log("DELETE start")
+  let {documentid,documentnametxt} = req.body;
+    const results =  db.query(`DELETE from documentupload where id = $1`, [documentid]);
+    console.log(results);
+ 
+
+    res.status(200).send({ message: "File Deleted", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
+});
+router.post("/api/v1/scholarship/documentupload", async (req, res) => {
+  try{
+  console.log("upload start")
+  let {stuid,appid,documentnametxt} = req.body;
+    const newpath = path.join(__dirname, '../public/uploads/');
+  const otherdocumentfile = req.files.file;
+  const otherdocumentfilename = Date.now()+otherdocumentfile.name;
+ console.log("Print atas")
+  otherdocumentfile.mv(`${newpath}${otherdocumentfilename}`, (err) => {
+    if (err) {
+      res.status(500).send({ message: "File upload failed", code: 200 });
+    }
+    const results =  db.query(`INSERT INTO documentupload(stuid,appid,documentname,docfilename,approvestatus)VALUES($1, $2, $3, $4, $5)`, [stuid,appid,documentnametxt,otherdocumentfilename,"0"]);
+    console.log(results);
+ 
+  });
+
+    const academicyearapp = new Date().getFullYear().toString()
+    const applicationreportgoogleUser = await db.query(`SELECT * FROM applicationreport WHERE stuid = $1 AND academicyear = $2`, [stuid,academicyearapp]);
+  console.log(applicationreportgoogleUser.rows, "googleUser");
+  if(applicationreportgoogleUser.rows.length > 0){
+    const applicationreportresults = await db.query(`UPDATE applicationreport SET currentstatus = $1 WHERE stuid = $2 AND academicyear = $3`, ['uploaddocument',stuid.toString(),academicyearapp]) ;
+  }else{
+    const applicationreportresults = db.query(`INSERT INTO applicationreport(stuid,applicantid,currentstatus,applicationlock,academicyear)
+    VALUES($1, $2, $3, $4, $5) RETURNING id`, [stuid.toString(),appid.toString(),'uploaddocument','false',academicyearapp]);
+  }
+
+
+    res.status(200).send({ message: "File Uploaded", code: 200 });
+ 
+ 
+
+
+}catch (err) {
+  console.log(err);
+}
+
+
+});
 
 
 // ==========================
