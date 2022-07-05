@@ -50,7 +50,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public'))); 
 app.use(cors())
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://nishkamscholarship.herokuapp.com',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 // routes
