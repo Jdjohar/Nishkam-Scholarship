@@ -53,6 +53,7 @@ router.post('/login', validInfo, async (req, res) => {
         // req.body
         const { email, password } = req.body;
         
+    console.log(email, 'Login 1 email')
         // error if no such user
         const user = await db.query("SELECT * FROM students WHERE email = $1", [
             email

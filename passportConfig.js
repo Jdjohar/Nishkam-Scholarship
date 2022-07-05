@@ -20,6 +20,11 @@ function initialize(passport) {
         const user = results.rows[0];
         // provide token
 
+        
+        if(user.emailverify != 'verified') {
+          return done(null, false, {message: "Email not verified."});
+      }
+
         const token = jwtGenerator(user.id);
         user['token'] = token;
 
@@ -29,7 +34,7 @@ function initialize(passport) {
           }
 
           if(isMatch) {
-            return done(null, user);
+            return done(null, user, {message: "Login Successfully"});
           } else {
             return done(null, false, {message: "Password is incorrect"})
           }
