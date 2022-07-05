@@ -12,7 +12,7 @@ CREATE TABLE products
     on_sale boolean
 );
 
-ALTER TABLE products ADD COLUMN featured boolean;
+ALTER TABLE students ADD COLUMN emailverify VARCHAR(255) NULL;
 ALTER TABLE products DROP COLUMN featured;
 
 
@@ -26,6 +26,12 @@ CREATE TABLE applicationreport (
     academicyear VARCHAR(255) NULL
 );
 
+ALTER TABLE applicationdata ADD COLUMN fatherfirstname TEXT NULL;
+ALTER TABLE applicationdata ADD COLUMN fathermiddlename TEXT NULL;
+ALTER TABLE applicationdata ADD COLUMN fatherlastname TEXT NULL;
+ALTER TABLE applicationdata ADD COLUMN motherfirstname TEXT NULL;
+ALTER TABLE applicationdata ADD COLUMN mothermiddlename TEXT NULL;
+ALTER TABLE applicationdata ADD COLUMN motherlastname TEXT NULL;
 CREATE TABLE applicationdata (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	stuid BIGINT NULL REFERENCES students(id),
@@ -34,23 +40,32 @@ CREATE TABLE applicationdata (
     cattype VARCHAR(255) NULL,
     applicationsession VARCHAR(255) NULL,
     fullname VARCHAR(255) NULL,
+    firstname VARCHAR(255) NULL,
+    middlename VARCHAR(255) NULL,
+    lastname VARCHAR(255) NULL,
     dob VARCHAR(255) NULL,
     religion VARCHAR(255) NULL,
     castecat VARCHAR(255) NULL,
     gender VARCHAR(255) NULL,
     contactno VARCHAR(255) NULL,
     email VARCHAR(255) NULL,
-    raddress  TEXT NULL,
+    raddress TEXT NULL,
     district  VARCHAR(255) NULL,
     tehsil  VARCHAR(255) NULL,
     stustate  VARCHAR(255) NULL,
     pincode  VARCHAR(255) NULL,
     residing  VARCHAR(255) NULL,
     Fathername  VARCHAR(255) NULL,
+    fatherfirstname TEXT NULL,
+    fathermiddlename TEXT NULL,
+    fatherlastname TEXT NULL,
     Fathereducation  VARCHAR(255) NULL,
     Fatheroccupation  VARCHAR(255) NULL,
     Fatherannualincome  VARCHAR(255) NULL,
     mothername  VARCHAR(255) NULL,
+    motherfirstname TEXT NULL,
+    mothermiddlename TEXT NULL,
+    motherlastname TEXT NULL,
     mothereducation  VARCHAR(255) NULL,
     motheroccupation  VARCHAR(255) NULL,
     motherannualincome  VARCHAR(255) NULL,
@@ -92,7 +107,6 @@ UPDATE studentcategory SET stuid = value1, WHERE catid = RETURNING * | output_ex
     catname VARCHAR(255) NULL,
     cattype VARCHAR(255) NULL,
     applicationsession VARCHAR(255) NULL,
-ALTER TABLE applicationdata ADD COLUMN contactno2 TEXT NULL;
 ALTER TABLE studentcategory ALTER COLUMN appid TYPE BIGINT NULL REFERENCES applicationdata(id);
 
 CREATE TABLE collegereport (
@@ -151,6 +165,9 @@ CREATE TABLE finalsubmit (
 );
 
 insert into interviewcenter (centername, centerinchargename,centerinchargephone)VALUES('Chandigarh','centerinchargename','centerinchargephone' );
+
+ALTER TABLE finalsubmit DROP COLUMN catid;
+ALTER TABLE finalsubmit ADD COLUMN catid TEXT NULL;
 
 CREATE TABLE finalsubmit (
     id BIGSERIAL NOT NULL PRIMARY KEY,
