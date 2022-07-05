@@ -368,12 +368,13 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
     if(err) {
       return next(err);
     }
+    console.log(info.message, 'Login 1')
     console.log(user, 'Login 1')
     
     if(!user) {
       return res.status(401).json({
         status: "failure",
-        message: "Login Details Incorrect",
+        message: info.message,
       });
     }
     return res.status(200).json({
