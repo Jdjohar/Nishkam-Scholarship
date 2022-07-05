@@ -111,7 +111,7 @@ console.log("jashan");
 //   });
 
 router.get("/icsexport",  (req, res) => {
-  axios.get("http://localhost:3000/api/v1/business/1")
+  axios.get("https://nishkamscholarship.herokuapp.comapi/v1/business/1")
   .then((response)=>
     {
       console.log(response.data.data);      
@@ -329,7 +329,7 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
       <body style="background-color: #ffffff; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
       <div style="font-size: 14px; mso-line-height-alt: 16.8px; color: #8d8a8a; line-height: 1.2; font-family: Arial, Helvetica Neue, Helvetica, sans-serif;">
 <p style="margin: 0; font-size: 14px;"><span style="">Dear `+name+`, <br/><br/>Thanks for being part of family</p>
-<a href="http://localhost:3000/api/v1/verify?email=`+email+`&check=`+hashedemail+`" style="text-decoration: none;" target="_blank">Verify Now</a>
+<a href="https://nishkamscholarship.herokuapp.comapi/v1/verify?email=`+email+`&check=`+hashedemail+`" style="text-decoration: none;" target="_blank">Verify Now</a>
 </div>
       </body>
       </html>` // html body
@@ -1117,11 +1117,8 @@ router.post("/api/v1/admin/finalsubmit", async(req, res) => {
       res.status(500).send({ message: "File upload failed", code: 200 });
     }
     console.log("results");
-<<<<<<< HEAD
-    const results =  db.query(`INSERT INTO finalsubmit(stuid,appid,catid,uniqueid,collegereportfilename,appilicationstatus,appilicationstatusmessage,entrytime,lastupdate,update_date)VALUES($1, $2, $3, $4, $5,$6,$7,$8,$9,$10)`, [stuid,appid,catid,uniqueid,collegereportfilename,"0","Pending",entrytime,lastupdate,update_date]);
-=======
-    const results = db.query(`INSERT INTO finalsubmit(stuid,appid,catid,uniqueid,collegereportfilename,appilicationstatus,appilicationstatusmessage,entrytime,lastupdate,update_date)VALUES($1, $2, $3, $4, $5,$6,$7,$8,$9,$10)`, [stuid,appid,catid,uniqueid,collegereportfilename,"0","Pending",entrytime,lastupdate,update_date]);
->>>>>>> 32356f910af6c0292be8524854d38e08d8c7075b
+
+ const results = db.query(`INSERT INTO finalsubmit(stuid,appid,catid,uniqueid,collegereportfilename,appilicationstatus,appilicationstatusmessage,entrytime,lastupdate,update_date)VALUES($1, $2, $3, $4, $5,$6,$7,$8,$9,$10)`, [stuid,appid,catid,uniqueid,collegereportfilename,"0","Pending",entrytime,lastupdate,update_date]);
     console.log(results);
 
 
