@@ -69,6 +69,9 @@ router.post('/login', validInfo, async (req, res) => {
         if(!passwordValid) {
             return res.status(401).json("Password or Email is Incorrect.");
         }
+        if(user.rows[0].emailverify != 'verified') {
+            return res.status(401).json("Email not verified.");
+        }
 
 
         // provide token
