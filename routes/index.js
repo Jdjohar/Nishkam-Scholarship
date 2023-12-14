@@ -132,15 +132,17 @@ router.get("/icsexport",  (req, res) => {
 
 
       // Mail send invites
-
       var smtpTransport = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-            user: "jdwebservices1@gmail.com",
-            pass: "Jashan86990"
-        }
-     });
-
+      service: "Gmail",
+      secure: false,
+      auth: {
+          user: "jdwebservices1@gmail.com",
+          pass: "djvbeavwgrtglzly"
+      },
+      tls:{
+        rejectUnauthorized: false
+      }
+   });
 
      function contentdetail(description, summary, business_name1, day1, phone_number, service){
       let content = 'BEGIN:VCALENDAR\n' +
@@ -236,6 +238,13 @@ router.get("/icsexport",  (req, res) => {
 
 })
 
+router.get("/api/v1/testapi1", async (req, res) => {
+  res.status(200).json({
+    status: "success 2",
+  });
+
+});
+
 
 // Nishkam Website test API
 router.get("/api/v1/testapi", async (req, res) => {
@@ -245,11 +254,13 @@ router.get("/api/v1/testapi", async (req, res) => {
     // console.log(results);
     res.status(200).json({
       status: "success 2",
-     
     });
 
   }catch (err) {
     console.log(err);
+    res.status(200).json({
+			status: "database not connected",
+		});
   }
 });
 
@@ -307,16 +318,20 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
       
       var transporter = nodemailer.createTransport({
         service: "Gmail",
+        secure: false,
         auth: {
-            user: "manavsingh839@gmail.com",
-            pass: "ecxfsoqsccsygakb"
+            user: "jdwebservices1@gmail.com",
+            pass: "djvbeavwgrtglzly"
+        },
+        tls:{
+          rejectUnauthorized: false
         }
      });
 
      let info = await transporter.sendMail({
-      from: '"Nishkam 👻" <manavsingh839@gmail.com>', // sender address
+      from: '"Scholarship Automation Nishkam" <jdwebservices1@gmail.com>', // sender address
       to: `${email}`, // list of receivers
-      subject: "Verification Email - Nishkam", // Subject line
+      subject: "User Email Verification Email - Nishkam", // Subject line
       // text: `Hello ${results.rows[0].name}, Your New Password is ${hashedemail}`, // plain text body
       html: ` <!DOCTYPE html>
 
@@ -329,7 +344,7 @@ router.post("/api/v1/scholarship/signup", async (req, res, next) => {
       <body style="background-color: #ffffff; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;">
       <div style="font-size: 14px; mso-line-height-alt: 16.8px; color: #8d8a8a; line-height: 1.2; font-family: Arial, Helvetica Neue, Helvetica, sans-serif;">
 <p style="margin: 0; font-size: 14px;"><span style="">Dear `+name+`, <br/><br/>Thanks for being part of family</p>
-<a href="https://nishkamscholarship.herokuapp.com/api/v1/verify?email=`+email+`&check=`+hashedemail+`" style="text-decoration: none;" target="_blank">Verify Now</a>
+<a href="https://scholarshipfront.azurewebsites.net/api/v1/verify?email=`+email+`&check=`+hashedemail+`" style="text-decoration: none;" target="_blank">Verify Now</a>
 </div>
       </body>
       </html>` // html body
@@ -369,7 +384,7 @@ router.post("/api/v1/scholarship/login",function(req,res,next){
       return next(err);
     }
     console.log(info.message, 'Login 1')
-    console.log(user, 'Login 1')
+    console.log(user, 'Login')
     
     if(!user) {
       return res.status(401).json({
@@ -417,6 +432,42 @@ router.post("/api/v1/scholarship/social-login", async(req,res)=> {
     })
   }
 })
+
+
+// Forgot Password 
+router.post('/forgotPassword', async (req, res) => {
+  const { email } = req.body;
+
+  // Generate a unique token
+  const token = crypto.randomBytes(20).toString('hex');
+
+  // Save the token to the database along with the user's email
+  try {
+    await db.none('UPDATE users SET reset_token = $1 WHERE email = $2', [token, email]);
+  } catch (error) {
+    console.error('Error updating reset token in the database:', error);
+    return res.status(500).send('Internal Server Error');
+  }
+
+  // Create the password reset link
+  const resetLink = `http://your-frontend-app/reset-password?token=${token}`;
+
+  // Send the password reset email
+  const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: email,
+    subject: 'Password Reset Request',
+    text: `Click the following link to reset your password: ${resetLink}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Password reset email sent successfully');
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 
@@ -1231,6 +1282,40 @@ router.post("/api/v1/application/view/full", async(req,res)=> {
 
 })
 
+router.get("/api/v1/applicationdetail/full/:id", async(req,res)=> {
+  let {id} = req.params;
+  try{
+    const checkfinalsubmit = await db.query(`select * from finalsubmit where uniqueid = $1 order by id desc`, [id]);
+    let stuid = checkfinalsubmit.rows.length > 0 ? checkfinalsubmit.rows[0].stuid : "0" 
+    let appid = checkfinalsubmit.rows.length > 0 ? checkfinalsubmit.rows[0].appid : "0" 
+    // let {stuid,appid} = req.body;
+  const applicationreport = await db.query(`select * from applicationreport where stuid = $1 AND applicantid = $2 order by id desc`, [stuid,appid]);
+  const checkdocument = await db.query(`select * from documentupload where stuid = $1 AND appid = $2 order by id desc`, [stuid,appid]);
+  const collegereportinfo = await db.query(`SELECT * FROM collegereport WHERE stuid = $1 AND applicantid = $2 order by id desc`, [stuid,appid]);
+  const applicationdatainfo = await db.query(`SELECT * FROM applicationdata WHERE id = $1 order by id desc`, [appid]);
+  // console.log(userinfo, "googleUser");
+  // if(applicationdatainfo.rows.length > 0){
+    res.status(200).json({
+      status: "success",
+      applicationdata: applicationdatainfo.rows,
+      collegereportdata: collegereportinfo.rows.length > 0 ? collegereportinfo.rows : null,
+      documentdata: checkdocument.rows.length > 0 ? checkdocument.rows : null,
+      finalsubmitdata: checkfinalsubmit.rows.length > 0 ? checkfinalsubmit.rows : null,
+      applicationreportdata: applicationreport.rows.length > 0 ? applicationreport.rows : null,
+      redirect: "/"
+    })
+  // } else {
+  //     res.status(201).json({
+  //     status: "failed",
+  //     message: "No Information exist in database",
+  //   })
+  // }  
+
+}catch (err) {
+  console.log(err);
+}
+
+})
 
 
 //user information
@@ -1523,9 +1608,13 @@ router.post("/api/v1/forgotpasswovrd/", async (req, res) => {
       
       var transporter = nodemailer.createTransport({
         service: "Gmail",
+        secure: false,
         auth: {
             user: "jdwebservices1@gmail.com",
-            pass: "Zsxedc@123@"
+            pass: "djvbeavwgrtglzly"
+        },
+        tls:{
+          rejectUnauthorized: false
         }
      });
 
@@ -1574,4 +1663,4 @@ router.post("/api/v1/forgotpasswovrd/", async (req, res) => {
 
 
 
-module.exports = router;
+module.exports = router;    
