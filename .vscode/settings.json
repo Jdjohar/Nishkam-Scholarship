@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/8c65d793-5e7f-4948-bd10-d3b127b29975/AppServices/subscriptions/8c65d793-5e7f-4948-bd10-d3b127b29975/resourceGroups/NishkamScholarship_group/providers/Microsoft.Web/sites/ScholarshipAutomation",
+    "appService.deploySubpath": "."
+}

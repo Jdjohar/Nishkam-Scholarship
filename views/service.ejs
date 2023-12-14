@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %> 
+</head>
+<body>
+<% include partials/menu %>
+
+<div class="container py-5">    
+  <div class="row">
+    <div class="col-md-4 offset-md-4 col-sm-4 offset-sm-4">
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100">95%</div>
+        </div>
+
+        <div class="heading-text py-4">
+            <h1 class="text-center">Services</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+      <div class="Services">
+   
+          <form action="">
+              <div class="services-tab" id="Frm">
+              <div class="form-group col-12"><label>Enter in each Service with its cost and duration</label><input type="text" class="form-control" id="businessname" placeholder="Service Name" value="" /></div>
+              <div class="form-group col-12">
+                  <label class="sr-only" for="inlineFormInputGroupTime">Time</label>
+                  <div class="input-group">
+                      <div class="input-group-prepend"><div class="input-group-text">Time</div></div>
+                      <input type="text" name="hello[]" class="form-control" id="inlineFormInputGroupTime" placeholder="Cost" value="" />
+                  </div>
+              </div>
+              <div id="city-div" class="form-group col-12">
+                  <label class="sr-only" for="inlineFormInputGroupCost">Cost</label>
+                  <div class="input-group"><input type="time" class="form-control" id="inlineFormInputGroupUsername" placeholder="Cost" value="" /></div>
+              </div>
+          </div>
+          </form>
+      
+          <div class="add-new-service" >
+              <div><button id="addNew" class="btn btn-outline-primary">Add New Services</button></div>
+          </div>
+          <div class="col-12 pt-5 text-center"><input type="submit" class="btn btn-outline-primary" value="Submit" /></div>
+      </div>
+  </div>
+  <div class="col-md-6">
+      <div class="img-section p-4"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8YnVzaW5lc3N8ZW58MHx8MHw%3D&amp;ixlib=rb-1.2.1&amp;w=1000&amp;q=80" class="img-fluid"></div>
+
+  </div>
+</div>
+
+
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("button").click(function(){
+    $("#Frm").clone().appendTo("form");
+  });
+});
+</script>
+</body>
+<% include partials/script %>
+</html>

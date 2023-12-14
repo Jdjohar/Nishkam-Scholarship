@@ -1,0 +1,8 @@
+NodeVersion="18.12.1"
+nodeBuildCommandsFile="/tmp/zipdeploy/extracted/oryx-build-commands.txt"
+Frameworks="Express"
+compressedNodeModulesFile="node_modules.tar.gz"
+OperationId="|GmTk3e4ANT8=.f7585868_"
+SourceDirectoryInBuildContainer="/tmp/8daed7b6ef9d3f8"
+PlatformName="nodejs"
+CompressDestinationDir="false"
